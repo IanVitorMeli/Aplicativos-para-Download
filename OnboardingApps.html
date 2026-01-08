@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apps do Treinamento</title>
+
+  <style>
+    :root{
+      --ml-yellow: #FFE600;
+      --ml-blue: #3483FA;
+      --bg: #EBEBEB;
+      --text: #333333;
+      --muted: #666666;
+      --card: #FFFFFF;
+      --border: #E6E6E6;
+      --shadow: 0 1px 2px rgba(0,0,0,.08);
+      --radius: 8px;
+      --container: 1100px;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .topbar{
+      background: var(--ml-yellow);
+      border-bottom: 1px solid rgba(0,0,0,.06);
+    }
+
+    .topbar__inner{
+      width: min(var(--container), 92vw);
+      margin: 0 auto;
+      padding: 14px 0;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+
+    .brand__logo{
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--ml-blue);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .topbar__right{
+      font-size: 13px;
+      color: rgba(0,0,0,.70);
+      text-align: right;
+      line-height: 1.25;
+    }
+
+    .container{
+      width: min(var(--container), 92vw);
+      margin: 18px auto 32px;
+    }
+
+    .title{
+      margin: 0 0 6px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .subtitle{
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .carousel{
+      display: grid;
+      grid-template-columns: 44px 1fr 44px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .viewport{
+      overflow: hidden;
+      border-radius: var(--radius);
+    }
+
+    .track{
+      display: flex;
+      transition: transform .28s ease;
+      will-change: transform;
+    }
+
+    .slide{
+      min-width: 100%;
+      padding: 2px;
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card__body{
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 14px;
+      padding: 16px;
+      align-items: center;
+    }
+
+    .thumb{
+      width: 120px;
+      height: 120px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #f5f5f5, #eaeaea);
+      border: 1px solid #efefef;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .thumb__img{
+      width: 76px;
+      height: 76px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .thumb__img img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: #fff;
+    }
+
+    .badge{
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 999px;
+      background: #EAF2FF;
+      color: #1f57b8;
+      border: 1px solid #d6e6ff;
+      font-weight: 700;
+    }
+
+    .info h2{
+      margin: 0 0 6px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #222;
+    }
+
+    .info p{
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .meta{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 13px;
+      color: #444;
+    }
+
+    .pill{
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #F7F7F7;
+      border: 1px solid #EEEEEE;
+    }
+
+    .card__footer{
+      border-top: 1px solid var(--border);
+      padding: 12px 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      background: #fff;
+    }
+
+    .hint{
+      font-size: 13px;
+      color: #444;
+    }
+
+    .actions{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .btn{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .btn--primary{ background: var(--ml-blue); color: #fff; }
+    .btn--primary:hover{ filter: brightness(.96); }
+
+    .btn--ghost{
+      background: #fff;
+      color: var(--ml-blue);
+      border-color: #cfe0ff;
+    }
+    .btn--ghost:hover{ background: #f5f9ff; }
+
+    /* QR area */
+    .qrs{
+      border-top: 1px solid var(--border);
+      padding: 12px 16px 16px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      background: #fff;
+      justify-content: center; /* centralizado */
+    }
+
+    .qr{
+      display: grid;
+      grid-template-columns: 86px 1fr;
+      gap: 10px;
+      align-items: center;
+      min-width: 260px;
+      padding: 10px;
+      border: 1px solid #f0f0f0;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .qrbox{
+      width: 86px;
+      height: 86px;
+      border: 1px solid #e6e6e6;
+      border-radius: 8px;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .qrbox canvas, .qrbox img{
+      width: 86px !important;
+      height: 86px !important;
+      display: block;
+    }
+
+    /* Texto em cima, logo embaixo */
+    .qr__head{
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .qr__title{
+      font-size: 12px;
+      color: #666;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .storeBadge{
+      display: block;
+      object-fit: contain;
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Play Store 2x maior */
+    .storeBadge--play{
+      width: 160px; /* maior para ficar legível */
+    }
+
+    /* App Store um pouco menor (ainda legível) */
+    .storeBadge--apple{
+      width: 120px;
+    }
+
+    .qr__link{
+      font-size: 12px;
+      color: #3483FA;
+      text-decoration: none;
+      word-break: break-word;
+      line-height: 1.25;
+    }
+    .qr__link:hover{ text-decoration: underline; }
+
+    .nav{
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid #dedede;
+      background: #fff;
+      color: #333;
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    .nav:hover{ background: #fafafa; }
+
+    .dots{
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .dot{
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      border: 1px solid #cfcfcf;
+      background: transparent;
+      cursor: pointer;
+    }
+    .dot.is-active{
+      background: var(--ml-blue);
+      border-color: var(--ml-blue);
+    }
+
+    footer{
+      width: min(var(--container), 92vw);
+      margin: 18px auto 28px;
+      color: #777;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 820px){
+      .card__footer{ grid-template-columns: 1fr; }
+      .actions{ justify-content: stretch; }
+    }
+
+    @media (max-width: 700px){
+      .carousel{ grid-template-columns: 40px 1fr 40px; }
+      .nav{ width: 40px; height: 40px; font-size: 20px; }
+      .card__body{ grid-template-columns: 92px 1fr; }
+      .thumb{ width: 92px; height: 92px; }
+      .thumb__img{ width: 58px; height: 58px; border-radius: 14px; }
+      .btn{ width: 100%; }
+      .qr{ min-width: 100%; }
+      .storeBadge--play{ width: 180px; }
+      .storeBadge--apple{ width: 140px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="brand">
+        <div class="brand__logo">IS</div>
+        <div>
+          <div>Treinamento</div>
+          <div style="font-size:12px; font-weight:600; color: rgba(0,0,0,.65);">Apps de Trabalho</div>
+        </div>
+      </div>
+
+      <div class="topbar__right">
+        <div><strong>Dica:</strong> aponte a câmera para o QR Code</div>
+        <div>Você será direcionado para a loja do app</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 class="title">Aplicativos necessários</h1>
+    <p class="subtitle"></p>
+
+    <section class="carousel" aria-label="Carrossel de aplicativos">
+      <button class="nav" type="button" aria-label="Voltar" id="prevBtn">‹</button>
+
+      <div class="viewport" tabindex="0" aria-roledescription="carousel" aria-label="Lista de aplicativos">
+        <div class="track" id="track">
+
+          <!-- 1) Google Chat -->
+          <article class="slide" data-appkey="google-chat">
+            <div class="card">
+              <div class="card__body">
+                <div class="thumb">
+                  <span class="badge">Obrigatório</span>
+                  <div class="thumb__img" aria-hidden="true">
+                    <img src="https://i.imgur.com/pndq2uN.png" alt="Logo do Google Chat" loading="lazy">
+                  </div>
+                </div>
+
+                <div class="info">
+                  <h2>Google Chat</h2>
+                  <p>Mensagens e comunicação rápida com o time durante o treinamento e o dia a dia.</p>
+                  <ul class="meta">
+                    <li class="pill"><strong>Plataformas:</strong> Android / iOS / Web</li>
+                    <li class="pill"><strong>Uso:</strong> Comunicação</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="qrs" aria-label="QR Codes do Google Chat">
+                <div class="qr">
+                  <div class="qrbox" data-qrbox="android" aria-label="QR Android"></div>
+                  <div>
+                    <div class="qr__head">
+                      <div class="qr__title">Play Store (Android)</div>
+                      <img class="storeBadge storeBadge--play"
+                           alt="Disponível no Google Play"
+                           src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg">
+                    </div>
+                    <a class="qr__link" data-qr-link="android" href="#" target="_blank" rel="noreferrer">Abrir link</a>
+                  </div>
+                </div>
+
+                <div class="qr">
+                  <div class="qrbox" data-qrbox="ios" aria-label="QR iOS"></div>
+                  <div>
+                    <div class="qr__head">
+                      <div class="qr__title">App Store (iOS)</div>
+                      <img class="storeBadge storeBadge--apple"
+                           alt="Disponível na App Store"
+                           src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg">
+                    </div>
+                    <a class="qr__link" data-qr-link="ios" href="#" target="_blank" rel="noreferrer">Abrir link</a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </article>
+
+          <!-- 2) My Ahgora -->
+          <article class="slide" data-appkey="my-ahgora">
+            <div class="card">
+              <div class="card__body">
+                <div class="thumb">
+                  <span class="badge">Obrigatório</span>
+                  <div class="thumb__img" aria-hidden="true">
+                    <img src="https://play-lh.googleusercontent.com/g3LS7hgd_gxh4FuVU9pBt60vybBtcj-endXIqfhM0bVyy7qTkDt7z1yQm6hbTyfXdu8" alt="Logo do My Ahgora" loading="lazy">
+                  </div>
+                </div>
+
+                <div class="info">
+                  <h2>My Ahgora</h2>
+                  <p>Registro de ponto, consultas e rotinas relacionadas à jornada de trabalho (conforme política interna).</p>
+                  <ul class="meta">
+                    <li class="pill"><strong>Plataformas:</strong> Android / iOS</li>
+                    <li class="pill"><strong>Uso:</strong> Ponto</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="qrs" aria-label="QR Codes do My Ahgora">
+                <div class="qr">
+                  <div class="qrbox" data-qrbox="android"></div>
+                  <div>
+                    <div class="qr__head">
+                      <div class="qr__title">Play Store (Android)</div>
+                      <img class="storeBadge storeBadge--play"
+                           alt="Disponível no Google Play"
+                           src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg">
+                    </div>
+                    <a class="qr__link" data-qr-link="android" href="#" target="_blank" rel="noreferrer">Abrir link</a>
+                  </div>
+                </div>
+
+                <div class="qr">
+                  <div class="qrbox" data-qrbox="ios"></div>
+                  <div>
+                    <div class="qr__head">
+                      <div class="qr__title">App Store (iOS)</div>
+                      <img class="storeBadge storeBadge--apple"
+                           alt="Disponível na App Store"
+                           src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg">
+                    </div>
+                    <a class="qr__link" data-qr-link="ios" href="#" target="_blank" rel="noreferrer">Abrir link</a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </article>
+
+          <!-- 3) Tu Recibo -->
+          <article class="slide" data-appkey="tu-recibo">
+            <div class="card">
+              <div class="card__body">
+                <div class="thumb">
+                  <span class="badge">Obrigatório</span>
+                  <div class="thumb__img" aria-hidden="true">
+                    <img
+                      src="data:image/png;base64,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"
+                      alt="Logo do Tu Recibo"
+                      loading="lazy"
+                    >
+                  </div>
+                </div>
+
+                <div class="info">
+                  <h2>Tu Recibo</h2>
+                  <p>Acesso a holerites/recibos, comprovantes e documentos relacionados à folha de pagamento.</p>
+                  <ul class="meta">
+                    <li class="pill"><strong>Plataformas:</strong> Android / iOS / Web</li>
+                    <li class="pill"><strong>Uso:</strong> RH</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="qrs" aria-label="QR Codes do Tu Recibo">
+                <div class="qr">
+                  <div class="qrbox" data-qrbox="android"></div>
+                  <div>
+                    <div class="qr__head">
+                      <div class="qr__title">Play Store (Android)</div>
+                      <img class="storeBadge storeBadge--play"
+                           alt="Disponível no Google Play"
+                           src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg">
+                    </div>
+                    <a class="qr__link" data-qr-link="android" href="#" target="_blank" rel="noreferrer">Abrir link</a>
+                  </div>
+                </div>
+
+                <div class="qr">
+                  <div class="qrbox" data-qrbox="ios"></div>
+                  <div>
+                    <div class="qr__head">
+                      <div class="qr__title">App Store (iOS)</div>
+                      <img class="storeBadge storeBadge--apple"
+                           alt="Disponível na App Store"
+                           src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg">
+                    </div>
+                    <a class="qr__link" data-qr-link="ios" href="#" target="_blank" rel="noreferrer">Abrir link</a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </article>
+
+          <!-- 4) SuccessFactors -->
+          <article class="slide" data-appkey="successfactors">
+            <div class="card">
+              <div class="card__body">
+                <div class="thumb">
+                  <span class="badge">Obrigatório</span>
+                  <div class="thumb__img" aria-hidden="true">
+                    <img src="https://cdn-1.webcatalog.io/catalog/successfactors/successfactors-icon-filled-256.webp?v=1742172298031" alt="Logo do SAP SuccessFactors" loading="lazy">
+                  </div>
+                </div>
+
+                <div class="info">
+                  <h2>SAP SuccessFactors</h2>
+                  <p>Portal de RH: informações do colaborador, solicitações e (dependendo do uso) treinamentos e avaliações.</p>
+                  <ul class="meta">
+                    <li class="pill"><strong>Plataformas:</strong> Android / iOS</li>
+                    <li class="pill"><strong>Uso:</strong> RH / Treinamentos</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="qrs" aria-label="QR Codes do SAP SuccessFactors">
+                <div class="qr">
+                  <div class="qrbox" data-qrbox="android"></div>
+                  <div>
+                    <div class="qr__head">
+                      <div class="qr__title">Play Store (Android)</div>
+                      <img class="storeBadge storeBadge--play"
+                           alt="Disponível no Google Play"
+                           src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg">
+                    </div>
+                    <a class="qr__link" data-qr-link="android" href="#" target="_blank" rel="noreferrer">Abrir link</a>
+                  </div>
+                </div>
+
+                <div class="qr">
+                  <div class="qrbox" data-qrbox="ios"></div>
+                  <div>
+                    <div class="qr__head">
+                      <div class="qr__title">App Store (iOS)</div>
+                      <img class="storeBadge storeBadge--apple"
+                           alt="Disponível na App Store"
+                           src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg">
+                    </div>
+                    <a class="qr__link" data-qr-link="ios" href="#" target="_blank" rel="noreferrer">Abrir link</a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <button class="nav" type="button" aria-label="Avançar" id="nextBtn">›</button>
+    </section>
+
+    <div class="dots" role="tablist" aria-label="Indicadores do carrossel" id="dots"></div>
+  </main>
+
+  <footer>© Time de IS — Lista de aplicativos para instalação</footer>
+
+  <!-- Biblioteca para gerar QR localmente -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    const STORE_LINKS = {
+      "my-ahgora": {
+        android: "https://play.google.com/store/apps/details?id=br.com.ahgora.myahgora&hl=pt_BR",
+        ios: "https://apps.apple.com/br/app/my-ahgora/id1502293191"
+      },
+      "google-chat": {
+        android: "https://play.google.com/store/apps/details?id=com.google.android.apps.dynamite&hl=pt_BR",
+        ios: "https://apps.apple.com/br/app/google-chat/id1163852619"
+      },
+      "tu-recibo": {
+        android: "https://play.google.com/store/apps/details?id=com.zetech.turecibo.v2&hl=pt_BR",
+        ios: "https://apps.apple.com/br/app/visma-turecibo/id1376623820"
+      },
+      "successfactors": {
+        android: "https://play.google.com/store/apps/details?id=com.successfactors.successfactors&pt_BR",
+        ios: "https://apps.apple.com/us/app/sap-successfactors-mobile/id426562526"
+      }
+    };
+
+    const QR_RENDER_SIZE = 86;
+
+    function renderQrInto(el, url) {
+      if (!el || !url) return;
+      el.innerHTML = "";
+      new QRCode(el, {
+        text: url,
+        width: QR_RENDER_SIZE,
+        height: QR_RENDER_SIZE,
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    function applyStoreLinksAndQrs() {
+      document.querySelectorAll(".slide[data-appkey]").forEach(slide => {
+        const key = slide.getAttribute("data-appkey");
+        const links = STORE_LINKS[key];
+        if (!links) return;
+
+        const btnAndroid = slide.querySelector('a[data-store="android"]');
+        const btnIos = slide.querySelector('a[data-store="ios"]');
+        if (btnAndroid) btnAndroid.href = links.android;
+        if (btnIos) btnIos.href = links.ios;
+
+        const linkAndroid = slide.querySelector('a[data-qr-link="android"]');
+        const linkIos = slide.querySelector('a[data-qr-link="ios"]');
+        if (linkAndroid) linkAndroid.href = links.android;
+        if (linkIos) linkIos.href = links.ios;
+
+        const boxAndroid = slide.querySelector('[data-qrbox="android"]');
+        const boxIos = slide.querySelector('[data-qrbox="ios"]');
+        renderQrInto(boxAndroid, links.android);
+        renderQrInto(boxIos, links.ios);
+      });
+    }
+
+    // Carrossel contínuo (fila)
+    const track = document.getElementById('track');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const dotsWrap = document.getElementById('dots');
+    const viewport = document.querySelector('.viewport');
+
+    const realSlides = Array.from(track.querySelectorAll('.slide'));
+    const N = realSlides.length;
+
+    const firstClone = realSlides[0].cloneNode(true);
+    const lastClone  = realSlides[N - 1].cloneNode(true);
+    firstClone.setAttribute('data-clone', 'first');
+    lastClone.setAttribute('data-clone', 'last');
+
+    track.insertBefore(lastClone, realSlides[0]);
+    track.appendChild(firstClone);
+
+    if (window.QRCode) applyStoreLinksAndQrs();
+
+    let index = 1;
+    let isAnimating = false;
+
+    for (let i = 0; i < N; i++) {
+      const b = document.createElement('button');
+      b.className = 'dot';
+      b.type = 'button';
+      b.setAttribute('aria-label', `Ir para o aplicativo ${i + 1}`);
+      b.addEventListener('click', () => goToReal(i));
+      dotsWrap.appendChild(b);
+    }
+    const dots = Array.from(dotsWrap.querySelectorAll('.dot'));
+
+    function setTransition(enabled) {
+      track.style.transition = enabled ? 'transform .28s ease' : 'none';
+    }
+
+    function updateDots() {
+      const realIndex = ((index - 1) % N + N) % N;
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === realIndex));
+    }
+
+    function render() {
+      track.style.transform = `translateX(-${index * 100}%)`;
+      updateDots();
+    }
+
+    function next() {
+      if (isAnimating) return;
+      isAnimating = true;
+      index += 1;
+      setTransition(true);
+      render();
+    }
+
+    function prev() {
+      if (isAnimating) return;
+      isAnimating = true;
+      index -= 1;
+      setTransition(true);
+      render();
+    }
+
+    function goToReal(realIndex) {
+      if (isAnimating) return;
+      isAnimating = true;
+      index = realIndex + 1;
+      setTransition(true);
+      render();
+    }
+
+    track.addEventListener('transitionend', () => {
+      if (index === 0) {
+        setTransition(false);
+        index = N;
+        render();
+      } else if (index === N + 1) {
+        setTransition(false);
+        index = 1;
+        render();
+      }
+      requestAnimationFrame(() => { isAnimating = false; });
+    });
+
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
+
+    viewport.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+    });
+
+    setTransition(false);
+    render();
+  </script>
+</body>
+</html>
